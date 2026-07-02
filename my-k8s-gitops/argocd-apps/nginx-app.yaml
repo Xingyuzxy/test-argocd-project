@@ -1,0 +1,27 @@
+# nginx-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-gitops-service
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: 'https://github.com/Xingyuzxy/test-argocd-project.git'
+    targetRevision: HEAD
+    path: my-k8s-gitops/apps/nginx 
+    
+    helm:
+      valueFiles:
+        - my-values.yaml
+  
+  destination:
+    server: 'https://kubernetes.default.svc' 
+    namespace: default 
+    
+  # 4. 驱动：开启自动同步（Auto Sync）
+  syncPolicy:
+    automated:
+      prune: true    # 如果 Git 里删除了某些配置，K8s 里也同步删除
+      selfHeal: true # 如果有人在 K8s 里偷偷改了参数，Argo CD 会自动把它纠正回 Git 的状态
