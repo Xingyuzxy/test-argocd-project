@@ -13,6 +13,8 @@ spec:
     path: my-k8s-gitops/apps/nginx 
     
     helm:
+      chart: nginx
+      repoURL: 'https://charts.bitnami.com/bitnami'
       valueFiles:
         - my-values.yaml
   
